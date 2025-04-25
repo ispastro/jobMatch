@@ -30,8 +30,29 @@ class JobPostController extends Controller
             $q->where('title','like', '%'.$search.'%')
             ->orWhere('description','like','%'.$search.'%');    
         });
+    }
+        //sortiing by created_at and title
+        if($request->has('sort')){
+            $sortBy =$request->sort; // corrected variable name
+            $order =$request->get('order', 'asc'); // default to 'asc  if not provided
+            $order=in_array(strtolower($order),['asc','desc']) ? $order : 'asc'; // check if the order is valid
 
-     }
+            // addding the allowable field here 
+
+            $allowedSorts =[
+                'created_at',
+                'title',
+                'location',
+                'status'
+            ];
+
+            if(in_array($sortBy, $allowedSorts)){
+                
+                $query->orderBy($sortBy,$order);
+            }
+         }
+
+     
 
 
 
