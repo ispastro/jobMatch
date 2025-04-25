@@ -1,0 +1,65 @@
+<?php
+namespace App\Http\Controllers;
+use App\Models\JobPost;
+use Illuminate\Http\Request;
+
+
+
+class JobPostController extends Controller
+{
+    // List all job posts
+    public function index( Request $request)
+    {
+
+        $query=JobPost::query();
+
+        // filter by status
+        if($request->has('status')){
+            $query->where('status',$request->status);
+            
+        }
+        if($request->has('location')){
+            $query->where('location', $request->location);
+        }
+
+       
+        return response()->json($query->get());
+    }
+
+    // Store a new job post
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required|string',
+            'status' => 'in:open,in_progress,completed'
+        ]);
+
+        $job = JobPost::create($validated);
+        return response()->json($job, 201);
+    }
+
+    // Show one job post
+    public function show($id)
+    {
+        return JobPost::findOrFail($id);
+    }
+
+    // Update a job post
+    public function update(Request $request, $id)
+    {
+        $job = JobPost::findOrFail($id);
+        $job->update($request->only(['title', 'description', 'location', 'status']));
+        return response()->json($job);
+    }
+
+    // Delete a job post
+    public function destroy($id)
+    {
+        $job = JobPost::findOrFail($id);
+        $job->delete();
+        return response()->json(['message' => 'Job deleted']);
+    }
+}
