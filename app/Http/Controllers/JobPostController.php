@@ -15,15 +15,28 @@ class JobPostController extends Controller
 
         // filter by status
         if($request->has('status')){
-            $query->where('status',$request->status);
+            $query->where('status', $request->status);
             
         }
         if($request->has('location')){
-            $query->where('location', $request->location);
+            $query->where('location', 'like', '%' . $request->location . '%');
         }
+       
+     // filter by search term
+
+     if($request->has('search')){
+        $search =$request->search;
+        $query->where(function($q) use($search){
+            $q->where('title','like', '%'.$search.'%')
+            ->orWhere('description','like','%'.$search.'%');    
+        });
+
+     }
+
+
 
        
-        return response()->json($query->get());
+        return response()->json($query->get()); // returns everything found 
     }
 
     // Store a new job post
