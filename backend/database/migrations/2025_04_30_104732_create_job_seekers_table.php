@@ -16,10 +16,10 @@ return new class extends Migration
             $table->id();
             $table->string('full_name');
             $table->string('phone')->nullable()->unique();
-            $table->string('email')->nullable()-unique();
+            $table->string('email')->nullable()->unique();
             $table->string('skill');
             $table->string('location');
-            $table->boolean('available')->default(true);\
+            $table->boolean('available')->default(true);
             $table->text('bio')->nullable();
             $table->timestamps();
 
