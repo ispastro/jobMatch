@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\JobSeekerProfile;
 use Illuminate\Http\Request;
+use\Illuminate\Support\Facades\Auth;
+
 
 class JobSeekerProfileController extends Controller
 {
@@ -11,24 +13,46 @@ class JobSeekerProfileController extends Controller
      * Display a listing of the resource.
      */
     public function index()
+
+
     {
+               
+
+        $profile =Auth::id();
+
+        if(!$profile){
+            return response()->json(['message'=>'not found'],404);
+          
+        }
+
+        return response()->json($profile);
+
         //
+  
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+  
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
+
     {
         //
+            $request ->validate([
+            'skill'=>'required|string',
+            'location'=>'required|string',
+            'available'=>'boolean',
+            'bio'=>'nullable|string',
+        ]);
+
+
+           $data['user_id']=Auth::id();
+
+        $profile=JobSeekerProfile::create($data);
+        return response()->json($profile);
+            
     }
 
     /**
@@ -37,22 +61,33 @@ class JobSeekerProfileController extends Controller
     public function show(JobSeekerProfile $jobSeekerProfile)
     {
         //
+
+        return response()->json($jobSeekerProfile->load('user'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(JobSeekerProfile $jobSeekerProfile)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
+    
+     // Update the specified resource in storage.
+     
     public function update(Request $request, JobSeekerProfile $jobSeekerProfile)
     {
-        //
+        //enusre the authenticated user is the owner of the profile
+        if($jobSeekerProfile->user_id!==Auth::id()){
+            return response()->json((['message'=>'Unauthorized']),403);
+
+        }
+
+        $data =$request->validate([
+            'skill'=>'sometimes|required|string',
+            'location'=>'sometimes|required|string',
+            'bio'=>'nullable|string',
+
+         
+
+        ]);
+
+        $jobSeekerProfile->update($data);
+        return response()->json($jobSeekerProfile);
+
     }
 
     /**
@@ -61,5 +96,12 @@ class JobSeekerProfileController extends Controller
     public function destroy(JobSeekerProfile $jobSeekerProfile)
     {
         //
+
+        if($jobSeekerProfile->user_id!==Auth::id()){
+            return response()->json((['message'=>'Unauthorized']),403);
+
+        }
+        $jobSeekerProfile->delete();
+        return response()->json(['message'=>'Profile deleted successfully']);
     }
 }

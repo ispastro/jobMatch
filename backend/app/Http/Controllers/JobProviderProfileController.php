@@ -13,46 +13,61 @@ class JobProviderProfileController extends Controller
     public function index()
     {
         //
+        $proille =Auth::id();
+        if(!profile){
+            return response()->json(['message'=>'not found'],404);
+        }
+
+        return resonse()->json($profile);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function store( Request $request)
     {
         //
+
+        $data = $request->validate([
+            'location' => 'required|string',
+            'description' => 'required|string',
+
+        ]);
+
+        $data['user_id']=Auth::id();
+        $profile = JobProviderProfile::create($data);
+        return response()->json($profile);
+        
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
+ 
+    
      * Display the specified resource.
      */
     public function show(JobProviderProfile $jobProviderProfile)
     {
-        //
+        return response()->json($jobProviderProfile);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(JobProviderProfile $jobProviderProfile)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, JobProviderProfile $jobProviderProfile)
     {
         //
+        if($jobProviderProfile->user_id!==Auth::id()){
+            return response()->json(['message'=>'unauthorized access'],403);
+        }
+
+        $data =$request->validate([
+            'location'=>'sometimes|string|max:255',
+            'description'=>'sometimes|string|max:255',
+        ])
+        $jobProviderProfile->update($data);
+        return response()->json($jobProviderProfile);
+
     }
 
     /**
@@ -61,5 +76,10 @@ class JobProviderProfileController extends Controller
     public function destroy(JobProviderProfile $jobProviderProfile)
     {
         //
+        if($jobProviderProfile->user_id!==Auth::id()){
+            return response()->json(['message'=>'unauthorized access'],403);
+        }
+        $jobProviderProfile->delete();
+        return response()->json(['message'=>'profile deleted successfully']);
     }
 }
