@@ -1,13 +1,17 @@
 import { useState } from 'react'
-import JobPostPage from './comonents/JobPostPage'
-import './App.css'
+import  HomePage  from './pages/HomePage'
+import './index.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+ 
 
   return (
-    <JobPostPage/>
+    <>
+      
+      <HomePage/>
+    </>
   )
+  
 }
 
 export default App
