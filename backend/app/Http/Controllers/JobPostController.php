@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Models\JobPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -64,12 +65,14 @@ class JobPostController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
+          
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'location' => 'required|string',
             'status' => 'in:open,in_progress,completed'
         ]);
+
+         $validated['user_id']=Auth::id();
 
         $job = JobPost::create($validated);
         return response()->json($job, 201);

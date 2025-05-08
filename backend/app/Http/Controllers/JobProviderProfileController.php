@@ -13,12 +13,12 @@ class JobProviderProfileController extends Controller
     public function index()
     {
         //
-        $proille =Auth::id();
-        if(!profile){
+       $profile =JobProviderProfile::where('user_id',Auth::id())->first();
+        if(!$profile){
             return response()->json(['message'=>'not found'],404);
         }
 
-        return resonse()->json($profile);
+        return response()->json($profile);
     }
 
     /**
@@ -47,7 +47,7 @@ class JobProviderProfileController extends Controller
      */
     public function show(JobProviderProfile $jobProviderProfile)
     {
-        return response()->json($jobProviderProfile);
+        return response()->json($jobProviderProfile)->load('user');
     }
 
     /**
@@ -64,7 +64,7 @@ class JobProviderProfileController extends Controller
         $data =$request->validate([
             'location'=>'sometimes|string|max:255',
             'description'=>'sometimes|string|max:255',
-        ])
+        ]);
         $jobProviderProfile->update($data);
         return response()->json($jobProviderProfile);
 

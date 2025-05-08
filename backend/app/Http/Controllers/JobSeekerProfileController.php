@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\JobSeekerProfile;
 use Illuminate\Http\Request;
-use\Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class JobSeekerProfileController extends Controller
@@ -17,8 +18,8 @@ class JobSeekerProfileController extends Controller
 
     {
                
-
-        $profile =Auth::id();
+$profile =JobSeekerProfile::where('user_id', Auth::id())->first();
+    
 
         if(!$profile){
             return response()->json(['message'=>'not found'],404);

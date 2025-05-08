@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('job_provider_profiles', function (Blueprint $table) {
         $table->id();
         $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-        $table->string('location');
+        $table->string('location')-nullable();
         $table->text('description')->nullable();
         $table->timestamps();
         });
