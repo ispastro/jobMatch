@@ -21,7 +21,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [UserController::class, 'me']);
     Route::put('/me', [UserController::class, 'update']);
 
-    Route::apiResource('/job-posts', JobPostController::class);
-    Route::apiResource('/job-seekers', JobSeekerProfileController::class);
-    Route::apiResource('/job-providers', JobProviderProfileController::class);
+    Route::middleware('role:job_provider')->group(function(){
+       Route::apiResource('/job-posts', JobPostController::class);
+       Route::apiResource('/job-providers', JobProviderProfileController::class);
+    });
+
+    Route::middleware('role:job_seeker')->group(function(){
+          Route::apiResource('/job-seekers', JobSeekerProfileController::class);
+    });
+     
 });
+ 
