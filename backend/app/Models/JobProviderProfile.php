@@ -14,7 +14,7 @@ class JobProviderProfile extends Model
     // fiels that can be mass assigned 
 
     protected $fillable=[
-        'use_id',
+        'user_id',
         'location',
         'description',
 
@@ -23,5 +23,5 @@ class JobProviderProfile extends Model
     public function user(){
         return $this->belongsTo(User::class);
 
-    };
+    }
 }

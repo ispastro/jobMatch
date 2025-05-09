@@ -15,7 +15,7 @@ return new class extends Migration
         $table->id();
         $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
         $table->string('skill')->nullable();
-        $table->string('location');
+        $table->string('location')->nullable();
         $table->boolean('available')->default(true);
         $table->text('bio')->nullable();
         $table->timestamps();

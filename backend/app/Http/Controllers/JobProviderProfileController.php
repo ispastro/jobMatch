@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\JobProviderProfile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class JobProviderProfileController extends Controller
 {
